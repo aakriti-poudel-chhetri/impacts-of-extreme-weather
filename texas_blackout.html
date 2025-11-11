@@ -79,7 +79,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="texas_blackout.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#load-required-libraries" id="toc-load-required-libraries" class="nav-link active" data-scroll-target="#load-required-libraries">Load required libraries</a></li>
+  <li><a href="#read-data" id="toc-read-data" class="nav-link" data-scroll-target="#read-data">Read data</a></li>
+  <li><a href="#merge-raster-data-and-create-houston-bounding-box" id="toc-merge-raster-data-and-create-houston-bounding-box" class="nav-link" data-scroll-target="#merge-raster-data-and-create-houston-bounding-box">Merge raster data and create houston bounding box</a>
+  <ul class="collapse">
+  <li><a href="#visualize-before-and-after-night-light-intensities" id="toc-visualize-before-and-after-night-light-intensities" class="nav-link" data-scroll-target="#visualize-before-and-after-night-light-intensities">Visualize before and after night light intensities</a></li>
+  </ul></li>
+  <li><a href="#create-blackout-mask" id="toc-create-blackout-mask" class="nav-link" data-scroll-target="#create-blackout-mask">Create blackout mask</a></li>
+  <li><a href="#estimate-of-the-number-of-homes-in-houston-that-lost-power" id="toc-estimate-of-the-number-of-homes-in-houston-that-lost-power" class="nav-link" data-scroll-target="#estimate-of-the-number-of-homes-in-houston-that-lost-power">Estimate of the number of homes in Houston that lost power</a>
+  <ul class="collapse">
+  <li><a href="#map-of-the-homes-in-houston-that-lost-power" id="toc-map-of-the-homes-in-houston-that-lost-power" class="nav-link" data-scroll-target="#map-of-the-homes-in-houston-that-lost-power">Map of the homes in Houston that lost power</a></li>
+  </ul></li>
+  <li><a href="#census-tracts-in-houston-that-lost-power" id="toc-census-tracts-in-houston-that-lost-power" class="nav-link" data-scroll-target="#census-tracts-in-houston-that-lost-power">Census tracts in Houston that lost power</a>
+  <ul class="collapse">
+  <li><a href="#map-of-the-census-tracts-in-houston-that-lost-power" id="toc-map-of-the-census-tracts-in-houston-that-lost-power" class="nav-link" data-scroll-target="#map-of-the-census-tracts-in-houston-that-lost-power">Map of the census tracts in Houston that lost power</a></li>
+  </ul></li>
+  <li><a href="#plot-comparing-the-distributions-of-median-household-income" id="toc-plot-comparing-the-distributions-of-median-household-income" class="nav-link" data-scroll-target="#plot-comparing-the-distributions-of-median-household-income">Plot comparing the distributions of median household income</a></li>
+  <li><a href="#brief-reflection" id="toc-brief-reflection" class="nav-link" data-scroll-target="#brief-reflection">Brief reflection</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="texas_blackout.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -120,8 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="read-data" class="level2">

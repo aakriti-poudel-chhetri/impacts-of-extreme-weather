@@ -1,17 +1,21 @@
 ---
 title: "Identifying the impacts of extreme weather"
-author: Aakriti Poudel
+author: "Aakriti Poudel"
 date: "10/08/2025"
 format:
-  html: default
-  pdf: 
-    code-fold: FALSE
-execute: 
+  pdf:
+    code-fold: false
+    toc: true
+  html: 
+    code-fold: false
+    toc: true
+execute:
   warning: false
   message: false
 editor: source
+editor_options: 
+  chunk_output_type: inline
 ---
-
 
 ## Load required libraries
 
@@ -20,7 +24,6 @@ library(tidyverse)
 library(sf)
 library(tmap)
 library(terra)
-library(kableExtra)
 library(stars)
 ```
 
@@ -149,7 +152,7 @@ tmap_arrange(beforestorm, afterstorm, legend_map, ncol = 3)
 ```{r}
 #| include: false
 # Save night light intensities map
-arranged_maps <- tmap_arrange(beforestorm, afterstorm, legend_map, ncol = 3)
+arranged_maps <- tmap_arrange(beforestorm, afterstorm, ncol = 3)
 
 tmap_save(tm = arranged_maps, here::here('figs', 'before-after-storm.jpeg'),
           width = 14,
