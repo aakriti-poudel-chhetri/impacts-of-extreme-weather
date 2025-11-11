@@ -10,7 +10,7 @@ Climate change is increasing the frequency and severity of extreme weather event
 
 This assignment aims to identify the impacts of these extreme winter storms by estimating the number of homes in the Houston metropolitan area that lost power and examining whether these impacts were disproportionately distributed. The analysis is based on remotely sensed night light data.
 
-![**Night light intensity in Houston before and after storm**](/figs/night-light-intensitiies.jpg)
+![**Night light intensity in Houston before and after storm**](/figs/before-after-storm.jpeg)
 
 All analysis were done on R version 4.5.1 using the following libraries tidyverse, sf, here and tmap.
 

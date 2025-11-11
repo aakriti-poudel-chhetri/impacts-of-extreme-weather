@@ -66,9 +66,7 @@ income <- st_read(here::here('data', 'ACS_2019_5YR_TRACT_48_TEXAS.gdb'), layer =
 
 ```
 
-# **Maps comparing night light intensities before and after the first two storms.**
-
-### Merge raster data
+## Merge raster data and create houston bounding box
 
 ```{r}
 # Merge two raster data of February 7
@@ -76,9 +74,7 @@ nightlight_07 <- st_mosaic(tile05_07, tile06_07)
 
 # Merge two raster data of February 16
 nightlight_16 <- st_mosaic(tile05_16, tile06_16)
-```
 
-```{r}
 # Create Houston bounding box
 houston_bbox <- st_bbox(c(xmin = -96.5, xmax = -94.5, ymin = 29, ymax = 30.5),
                         crs = 'EPSG:4326')
@@ -91,7 +87,7 @@ nightlight_16_crop <- st_crop(nightlight_16, houston_bbox)
 nightlight_16_crop[(nightlight_16_crop > 1000) | (nightlight_16_crop <= 0)] <- NA
 ```
 
-### Visualize before and after storm
+### Visualize before and after night light intensities
 
 ```{r}
 #| fig-width: 18
@@ -150,7 +146,18 @@ tmap_arrange(beforestorm, afterstorm, legend_map, ncol = 3)
 
 ```
 
-# Create blackout mask
+```{r}
+#| include: false
+# Save night light intensities map
+arranged_maps <- tmap_arrange(beforestorm, afterstorm, legend_map, ncol = 3)
+
+tmap_save(tm = arranged_maps, here::here('figs', 'before-after-storm.jpeg'),
+          width = 14,
+          height = 8)
+
+```
+
+## Create blackout mask
 
 ```{r}
 # Calculate the difference in light intensity
@@ -168,7 +175,6 @@ blackout <- st_as_sf(mask,
   st_transform(crs = 'EPSG:3083')
 ```
 
-
 ```{r}
 # Combine all highway geometries into one
 highways_union <- st_union(highways)
@@ -179,39 +185,22 @@ highways_buffer <- st_buffer(highways_union, dist = 200)
 # Find areas that experienced blackouts further than 200m from highways
 blackout_far <- st_difference(blackout, highways_buffer)
 
-
+# Visualize the blackout in Houston
 tm_basemap('OpenStreetMap') +
   tm_shape(blackout_far) +
     tm_polygons(fill = 'ivory', fill_alpha = 0.8, col = 'black') +
-    tm_title("Initial Blackout Areas in Houston", size = 1.2) +
-    tm_layout(legend.show = FALSE) +
-    tm_scalebar(position = c("left", "bottom")) +
-    tm_compass(position = c("right", "top"))
+    tm_title('Blackout areas in Houston', fontface = 'bold', size = 1) +
+    tm_layout(legend.show = TRUE) +
+    tm_scalebar(position = c('left', 'bottom')) +
+    tm_compass(position = c('right', 'top'))
 
 ```
 
-```{r}
-#| include: false
-#| fig.width: 8
-#| fig.height: 8
-#| warning: false
+## Estimate of the number of homes in Houston that lost power
 
-# # Merge geometries for plotting
-# blackout_houston <- st_union(blackout_far)
-# 
-# # Make the map
-# tm_basemap("CartoDB.VoyagerNoLabels") + 
-#   tm_shape(blackout_houston) +
-#   tm_polygons(fill = "red",
-#               col = "darkred") +
-#   tm_title("Initial Blackout Areas in Houston", size = 1.2) +
-#   tm_layout(legend.show = FALSE) +
-#   tm_scalebar(position = c("left", "bottom")) +
-#   tm_compass(position = c("right", "top"))
-```
+Approximately **157,970** homes in Houston lost power in February 2021 due to the severe winter storms and resulting major power crisis.
 
-**Identify the number of homes likely impacted by blackouts**
-
+Note: I used `st_intersects`. `st_intersects` returns a boolean value indicating whether two geometries share any features or if they have any point in common. `TRUE (or 1)` if the geometries intersect, `FALSE (or 0)` if they are completely separate.
 
 ```{r}
 # Keep buildings that intersect with blackout areas
@@ -226,11 +215,6 @@ blackout_houses <- houses[in_blackout, ]
 # Number of impacted buildings
 n_blackout_houses <- nrow(blackout_houses)
 
-```
-
-**A map of the homes in Houston that lost power**
-
-```{r}
 # Convert all buildings to centroids
 houses_points <- houses %>% 
   st_centroid()
@@ -244,6 +228,8 @@ houses_not_impacted <- houses_points %>%
   filter(!osm_id %in% blackout_houses$osm_id)
 
 ```
+
+### Map of the homes in Houston that lost power
 
 ```{r}
 #| fig-width: 6
@@ -274,6 +260,7 @@ tm_basemap('OpenStreetMap') +
              size = 2)
 
 ```
+## Census tracts in Houston that lost power
 
 ```{r}
 # Rename the column in income dataset to match with the census tract
@@ -320,7 +307,7 @@ census_blackout_col_filtered <- census_blackout_col[census_blackout_col$blackout
 
 ```
 
-**a map of the census tracts in Houston that lost power**
+### Map of the census tracts in Houston that lost power
 
 ```{r}
 #| fig-width: 5
@@ -352,9 +339,35 @@ tm_basemap('CartoDB.VoyagerNoLabels') +
   
  
 ```
-## **Plot comparing the distributions of median household income for census tracts that did and did not experience blackouts**
+## Plot comparing the distributions of median household income
 
 ```{r}
-ggplot(census_blackout_col_filtered, aes( x = ))
+#| label: fig-income
+#| fig-cap: "This plot compares the distributions of median household income between census tracts that experienced blackouts and those that did not during the severe winter storms of February 2021 in Houston, Texas."
+
+ggplot(census_blackout_col %>% filter(!is.na(B19013e1)), # Remove NA values
+                                      aes( x = blackout, y = B19013e1, fill = blackout)) +
+  geom_boxplot(alpha = 0.8) +
+  scale_x_discrete(labels = c('TRUE' = 'Blackout',
+                              'FALSE' = 'No blackout')) +
+  scale_fill_manual(values = c('TRUE' = 'firebrick',
+                               'FALSE' = 'midnightblue'),
+                    labels = c('Blackout', 'No blackout')) +
+  labs(title = 'Median household income for census tracts',
+       subtitle = 'Blackout status in Houston census tracts',
+       x = 'Blackout status',
+       y = 'Median household income in $',
+       fill = 'Status') +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = 'bold', size = 16),
+        plot.subtitle = element_text(size = 14),
+        legend.position = 'bottom')
 ```
 
+## Brief reflection
+
+**A brief reflection (approx. 100 words) summarizing your results and discussing any limitations to this study**
+
+**Answer**
+This analysis used satellite data to compare median household incomes between areas affected and unaffected by the blackout. Interestingly, higher-income census tracts were more affected, as their median income was slightly higher than that of non-blackout areas. This result may reflect several limitations such as wealthier neighborhoods often have more outdoor lighting, census tract–level data may overlook neighborhood differences, and blackout areas could be misclassified due to highway lighting or cloud cover. The analysis may also have assumed all structures were residential, while vegetation near power lines and the 200-meter buffer used could further limit accuracy of true lighting. 
