@@ -71,6 +71,6 @@ Teaching Team:
 -   **Instructor:** [Annie Adams](https://github.com/annieradams)
 -   **Teaching Assistant:** [Alessandra Vidal Meza](https://avidalmeza.com/)
 
-Complete description for the homework can be found on the [Assignment-1](https://eds-223-geospatial.github.io/assignments/HW1.html)
+Complete description for the homework can be found on the [Assignment-2](https://eds-223-geospatial.github.io/assignments/HW3.html)
 
 #### **Author**: Aakriti Poudel
