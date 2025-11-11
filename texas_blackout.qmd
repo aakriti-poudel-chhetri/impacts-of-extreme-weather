@@ -12,6 +12,7 @@ execute:
 editor: source
 ---
 
+
 ## Load required libraries
 
 ```{r}
@@ -166,6 +167,7 @@ blackout <- st_as_sf(mask,
   st_make_valid() %>%
   st_transform(crs = 'EPSG:3083')
 ```
+
 
 ```{r}
 # Combine all highway geometries into one
@@ -349,5 +351,10 @@ tm_basemap('CartoDB.VoyagerNoLabels') +
               text.size = 0.8)
   
  
+```
+## **Plot comparing the distributions of median household income for census tracts that did and did not experience blackouts**
+
+```{r}
+ggplot(census_blackout_col_filtered, aes( x = ))
 ```
 
