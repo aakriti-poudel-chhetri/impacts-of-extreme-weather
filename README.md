@@ -31,7 +31,7 @@ This repository contains the following files 1. .gitignore 2. impacts-of-extreme
 impacts-of-extreme-weather
 └───figs/
     └── before-after-storm.jpeg
-    └──README-screenshot.png
+    └──README-screenshot.jpeg
 └───.gitignore
     └───data
         └───gis_osm_buildings_a_free_1.gpkg
